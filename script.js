@@ -4,20 +4,25 @@ const output = document.querySelector('#todos');
 const textError = document.querySelector('#textError');
 // const checkBtn = document.querySelector('.check-btn');
 
-let todos = []
+// test 2
+let todos = [];
 
-const listTodos = () => {
-
-  output.innerHTML = '';
-
+const fetchTodos = () => {
   fetch('https://jsonplaceholder.typicode.com/todos')
     .then(res => res.json())
     .then(data => {
       todos = data;
-      output.innerHTML = ''
-      todos.forEach(todo => {
-        output.innerHTML += `
-        <div id="${todo.id}" class="row justify-content-center">
+      listTodos();
+    })
+}
+
+fetchTodos();
+
+const listTodos = () => {
+  output.innerHTML = '';
+  todos.forEach(todo => {
+    let template = `
+    <div id="${todo.id}" class="row justify-content-center">
         <div class="col-11 align-self-center border rounded bg-white p-1">
           <h5 class="todo-text">${todo.title}</h5>
         </div>
@@ -25,104 +30,55 @@ const listTodos = () => {
           <button class="check-btn"><i class="far fa-check-circle"></i></button>
         </div>
         </div>`
-      })
-    })
+    output.insertAdjacentHTML('beforeend', template)
+  })
 }
 
-listTodos();
-
-// exempel på att göra post
-
-// const newTodo = {
-// 	name: "Leslie Tudor",
-// 	email: "leslie.tudor@email.com",
-// 	body: "This is an example post by Career Karma!",
-// 	postId: 1
-// }
-
-// const options = {
-// 	method: "POST",
-// 	body: JSON.stringify(newTodo),
-// 	headers: {
-// 		"Content-Type": "application/json"
-// 	}
-// };
-
-// fetch('https://jsonplaceholder.typicode.com/todos', options)
-//   .then(response => response.json())
-//   .then(json => console.log(json))
-
-// --------------------------------------
-
-// fetch('https://jsonplaceholder.typicode.com/todos', {
-//   method: 'POST',
-//   body: JSON.stringify({
-//     title: 'foo',
-//     body: 'bar',
-//     userId: 1,
-//   }),
-//   headers: {
-//     'Content-type': 'application/json; charset=UTF-8',
-//   },
-// })
-//   .then((response) => response.json())
-//   .then((json) => console.log(json));
-
-  // slut på exempel
-    
-    
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-    
-      if(input.value.trim() !== '') {
-        input.classList.remove('is-invalid');
-    
-        let todo = {
-          id: Date.now().toString(), 
-          title: input.value,
-          completed: false
-        }
-
-        // const options = {
-        //     method: "POST",
-        //     body: JSON.stringify(todo),
-        //     headers: {
-        //     	"Content-Type": "application/json"
-        //     }
-        // }
-            
-        // fetch('https://jsonplaceholder.typicode.com/todos', options)
-        //   .then(response => response.json())
-        //   .then(json => console.log(json))
-            
-        
-      
-        todos.push(todo);
-      
-        listTodos();
-      
-        input.value = ''
-      } else {
-            input.classList.add('is-invalid');
-      }
+const createTodo = (title) => {
+  if(input.value.trim() !== '') {
+    input.classList.remove('is-invalid');
+  fetch('https://jsonplaceholder.typicode.com/todos', {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json; charset=UTF-8'
+    },
+    body: JSON.stringify({
+      title,
+      completed: false
     })
+  })
+  .then(res => res.json())
+  .then(data => {
+
+    let newTodo = {
+      ...data,
+    }
+    todos.unshift(newTodo);
+    listTodos();
+  })
+} 
+else {
+      input.classList.add('is-invalid');
+}
+}
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
+  createTodo(input.value);
+  form.reset();
+})
     
-    input.addEventListener('keyup', () => {
-      if(input.value.trim() !== '') {
-        input.classList.remove('is-invalid');
-      } else {
-        input.classList.add('is-invalid');
-      }
-    })
     
+    // output.addEventListener('click', e => {
+    //   if(e.target.classList.contains('btn')) {
+    //     todos = todos.filter(todo => todo.id !== e.target.parentNode.id)
+    //     listTodos();
+    //   }
     
-    output.addEventListener('click', e => {
-      if(e.target.classList.contains('btn')) {
-        todos = todos.filter(todo => todo.id !== e.target.parentNode.id)
-        listTodos();
-      }
-    
-    })
+    // })
+
+
 
 const checkBtn = document.querySelector('.check-btn');
 
