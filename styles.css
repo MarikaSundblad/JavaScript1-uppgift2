@@ -27,13 +27,17 @@ color: azure;
       border: none;
 }
 
-.green-btn {
-      font-size: 1.5rem;
-      color: #03c734;
-      background-color: transparent;
-      border: none;
-}
-
 .todo-text {
       margin: 0;
+}
+
+.done {
+      color: #03c734;
+}
+
+.undone {
+      color: #8f8f8f;
+}
+.trash {
+      color: #cf0101;
 }
